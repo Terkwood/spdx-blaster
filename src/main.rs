@@ -4,6 +4,7 @@ extern crate log;
 
 pub mod comment;
 pub mod dialect;
+pub mod source;
 
 use clap::{App, Arg};
 use log::info;
