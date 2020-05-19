@@ -2,7 +2,7 @@
 
 🚧 This project is under construction! 🚧 
 
-Put [SPDX license IDs](https://spdx.dev/ids/) in your (so far, rust) source files.
+Write [SPDX license IDs](https://spdx.dev/ids/) into your source files. 
 
 ## Installation
 
