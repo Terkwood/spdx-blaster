@@ -1,6 +1,6 @@
 [package]
 name = "spdx-blaster"
-version = "0.0.0"
+version = "0.0.1"
 authors = ["terkwood <38859656+Terkwood@users.noreply.github.com>"]
 edition = "2018"
 
@@ -8,3 +8,4 @@ edition = "2018"
 clap = "2.33.1"
 log = "0.4.8"
 env_logger = "0.7.1"
+memmap = "0.7.0"
