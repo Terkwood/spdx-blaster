@@ -5,8 +5,18 @@ use crate::comment::*;
 
 #[derive(Debug, Clone, Copy)]
 pub enum Dialect {
+    C,
+    CPlusPlus,
+    CSharp,
+    Godot,
+    Haskell,
+    Java,
+    Javascript,
+    Python,
     Rust,
+    Scala,
     Shell,
+    Typescript,
     Unknown,
 }
 
@@ -20,7 +30,11 @@ impl Dialect {
             } else {
                 s.last()
                     .map(|ext| match ext.to_ascii_lowercase().trim() {
+                        "cs" => Dialect::CSharp,
                         "rs" => Dialect::Rust,
+                        "ts" => Dialect::Typescript,
+                        "sc" => Dialect::Scala,
+                        "scala" => Dialect::Scala,
                         "sh" => Dialect::Shell,
                         _ => Dialect::Unknown,
                     })
@@ -33,9 +47,13 @@ impl Dialect {
 
     pub fn comment(self) -> Comment {
         match self {
+            Dialect::Java => Comment::DoubleFwdSlash,
+            Dialect::Javascript => Comment::DoubleFwdSlash,
             Dialect::Rust => Comment::DoubleFwdSlash,
+            Dialect::Scala => Comment::DoubleFwdSlash,
             Dialect::Shell => Comment::Pound,
             Dialect::Unknown => Comment::Empty,
+            _ => Comment::Empty,
         }
     }
 }
