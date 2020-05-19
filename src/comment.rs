@@ -10,8 +10,8 @@ pub enum Comment {
 impl fmt::Display for Comment {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let s = match self {
-            Comment::DoubleFwdSlash => "//",
-            Comment::Pound => "#",
+            Comment::DoubleFwdSlash => "// ",
+            Comment::Pound => "# ",
             Comment::Empty => "",
         };
         write!(f, "{}", s)
