@@ -8,10 +8,8 @@ pub enum License {
 const PREFIX: &str = "SPDX-License-Identifier: ";
 
 impl License {
-    pub fn from(s: &str) -> Self {
-        match s.to_ascii_lowercase().trim() {
-            _ => License::MIT,
-        }
+    pub fn from(_s: &str) -> Self {
+        License::MIT
     }
 }
 
