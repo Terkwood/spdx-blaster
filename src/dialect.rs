@@ -12,6 +12,7 @@ pub enum Dialect {
     Haskell,
     Java,
     Javascript,
+    Kotlin,
     Python,
     Rust,
     Scala,
@@ -30,7 +31,15 @@ impl Dialect {
             } else {
                 s.last()
                     .map(|ext| match ext.to_ascii_lowercase().trim() {
+                        "c" => Dialect::C,
+                        "cpp" => Dialect::CPlusPlus,
                         "cs" => Dialect::CSharp,
+                        "gd" => Dialect::Godot,
+                        "hs" => Dialect::Haskell,
+                        "java" => Dialect::Java,
+                        "js" => Dialect::Javascript,
+                        "kt" => Dialect::Kotlin,
+                        "py" => Dialect::Python,
                         "rs" => Dialect::Rust,
                         "ts" => Dialect::Typescript,
                         "sc" => Dialect::Scala,
@@ -47,13 +56,20 @@ impl Dialect {
 
     pub fn comment(self) -> Comment {
         match self {
+            Dialect::C => Comment::DoubleFwdSlash,
+            Dialect::CPlusPlus => Comment::DoubleFwdSlash,
+            Dialect::CSharp => Comment::DoubleFwdSlash,
+            Dialect::Godot => Comment::Hash,
+            Dialect::Haskell => Comment::DoubleDash,
             Dialect::Java => Comment::DoubleFwdSlash,
             Dialect::Javascript => Comment::DoubleFwdSlash,
+            Dialect::Kotlin => Comment::DoubleFwdSlash,
+            Dialect::Python => Comment::Hash,
             Dialect::Rust => Comment::DoubleFwdSlash,
             Dialect::Scala => Comment::DoubleFwdSlash,
-            Dialect::Shell => Comment::Pound,
+            Dialect::Shell => Comment::Hash,
+            Dialect::Typescript => Comment::DoubleFwdSlash,
             Dialect::Unknown => Comment::Empty,
-            _ => Comment::Empty,
         }
     }
 }
