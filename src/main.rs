@@ -25,10 +25,10 @@ fn main() {
         .author("terkwood <38859656+Terkwood@users.noreply.github.com>")
         .about("Writes SPDX license IDs in your (so far, rust) source files.")
         .arg(
-            Arg::with_name("write")
-                .short("w")
-                .long("write")
-                .help("(bool) Update all relevant files with license string. If this option is ommitted, you'll simply see output")
+            Arg::with_name("display")
+                .short("d")
+                .long("display")
+                .help("Display which files would receive license strings")
                 .takes_value(false),
         )
         .arg(
@@ -36,7 +36,7 @@ fn main() {
                 .help("Sets the target directory (or file) to visit")
                 .required(false)
                 .default_value(".")
-                .takes_value( true),
+                .takes_value(true),
         )
         .get_matches();
 
@@ -44,11 +44,7 @@ fn main() {
     blaster::visit(
         Path::new(args.value_of("target").expect("arg target")),
         Opts {
-            write: args
-                .value_of("write")
-                .expect("arg write")
-                .parse()
-                .expect("parsed"),
+            display: args.is_present("display"),
         },
     )
 }
