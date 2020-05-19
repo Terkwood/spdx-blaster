@@ -14,9 +14,10 @@ cargo install --path .
 
 ## Usage
 
-For now, the tool can only deal with individual files (and not very many types of them).
+For now, the tool can only deal with individual files, although it knows about several different programming languages.
 
 ```sh
+# an example rust file
 spdx-blaster qux.rs
 ```
 
