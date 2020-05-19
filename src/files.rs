@@ -1,7 +1,6 @@
 use log::info;
 use memmap::MmapOptions;
-use std::fs::File;
-use std::fs::OpenOptions;
+use std::fs::{metadata, File, OpenOptions};
 use std::io::{Error, Write};
 use std::path::Path;
 
@@ -15,19 +14,21 @@ use crate::license::License;
 pub fn apply_license(path: &Path, license: License) -> Result<(), Error> {
     let license_line: Vec<u8> = license.to_string().bytes().collect();
 
-    info!("hi {} ", license);
+    info!("hi {} with len {} ", license, license_line.len());
 
     let file = OpenOptions::new().read(true).write(true).open(path)?;
-    let file_len: usize = todo!();
+    let file_len: usize = metadata(path).expect("file metadata").len() as usize;
 
+    info!("file len {}", file_len);
     let license_line_len = license_line.len();
+
     let total_len = file_len + license_line_len;
 
-    let mut map = unsafe { MmapOptions::new().len(todo!()).map_mut(&file)? };
+    let mut map = unsafe { MmapOptions::new().len(total_len).map_mut(&file)? };
 
-    map.rotate_right(license_line_len);
+    map[(total_len - license_line_len)..].copy_from_slice(&license_line);
 
-    map[..license_line_len].copy_from_slice(&license_line);
+    map.rotate_left(license_line_len);
 
     map.flush()
 }
