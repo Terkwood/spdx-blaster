@@ -18,12 +18,10 @@ impl Dialect {
                 Dialect::Unknown
             } else {
                 s.last()
-                    .and_then(|ext| {
-                        Some(match ext.to_ascii_lowercase().trim() {
-                            "rs" => Dialect::Rust,
-                            "sh" => Dialect::Shell,
-                            _ => Dialect::Unknown,
-                        })
+                    .map(|ext| match ext.to_ascii_lowercase().trim() {
+                        "rs" => Dialect::Rust,
+                        "sh" => Dialect::Shell,
+                        _ => Dialect::Unknown,
                     })
                     .unwrap_or(Dialect::Unknown)
             }
