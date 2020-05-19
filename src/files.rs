@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 use memmap::MmapOptions;
 use std::fs::{metadata, OpenOptions};
 use std::io::Error;

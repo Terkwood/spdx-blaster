@@ -19,3 +19,16 @@ For now, the tool can only deal with individual files (and not very many types o
 ```sh
 spdx-blaster qux.rs
 ```
+
+Having run the utility, you'll see a comment prepended at the top of the file:
+
+```text
+$ cat qux.rs
+
+// SPDX-License-Identifier: MIT
+extern crate clap;
+extern crate env_logger;
+extern crate log;
+extern crate memmap;
+```
+

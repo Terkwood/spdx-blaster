@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 use std::path::Path;
 
 use crate::comment::*;
