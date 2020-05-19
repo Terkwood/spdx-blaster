@@ -11,7 +11,7 @@ mod license;
 pub mod source;
 
 use clap::{App, Arg};
-use log::info;
+use log::trace;
 use std::path::Path;
 
 use crate::blaster::Opts;
@@ -22,7 +22,7 @@ const VERSION: &str = env!("CARGO_PKG_VERSION");
 
 fn main() {
     env_logger::init();
-    info!("🔢 {}", VERSION);
+    trace!("🔢 {}", VERSION);
     let args = App::new(NAME)
         .version(VERSION)
         .author("terkwood <38859656+Terkwood@users.noreply.github.com>")
@@ -51,7 +51,7 @@ fn main() {
         )
         .get_matches();
 
-    info!("Args: {:?}", args);
+    trace!("Args: {:?}", args);
     blaster::visit(
         Path::new(args.value_of("target").expect("arg target")),
         Opts {
