@@ -1,5 +1,7 @@
-use memmap::Mmap;
+use log::info;
+use memmap::MmapOptions;
 use std::fs::File;
+use std::fs::OpenOptions;
 use std::io::{Error, Write};
 use std::path::Path;
 
@@ -10,16 +12,24 @@ use crate::license::License;
 /// by the memory map of the underlying file.
 /// If any other process accesses the file, we're going to
 /// crash.  Hooray.
-pub fn apply_license(file: &Path, license: License) -> Result<(), Error> {
-    let file = File::open(file)?;
+pub fn apply_license(path: &Path, license: License) -> Result<(), Error> {
+    let license_line: Vec<u8> = license.to_string().bytes().collect();
 
-    let map = unsafe { Mmap::map(&file)? };
+    info!("hi {} ", license);
 
-    let random_indexes = [0, 1, 2, 19, 22, 10, 11, 29];
-    assert_eq!(&map[3..13], b"hovercraft");
-    let random_bytes: Vec<u8> = random_indexes.iter().map(|&idx| map[idx]).collect();
-    assert_eq!(&random_bytes[..], b"My loaf!");
-    Ok(())
+    let file = OpenOptions::new().read(true).write(true).open(path)?;
+    let file_len: usize = todo!();
+
+    let license_line_len = license_line.len();
+    let total_len = file_len + license_line_len;
+
+    let mut map = unsafe { MmapOptions::new().len(todo!()).map_mut(&file)? };
+
+    map.rotate_right(license_line_len);
+
+    map[..license_line_len].copy_from_slice(&license_line);
+
+    map.flush()
 }
 
 /// Path::is_dir() is not guaranteed to be intuitively correct for "." and ".."
