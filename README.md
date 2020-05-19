@@ -8,9 +8,11 @@ Put [SPDX license IDs](https://spdx.dev/ids/) in your (so far, rust) source file
 
 - [ ] play nicely with shebang lines
 - [ ] basically work: recurse through file system QUICKLY and apply, or show a preview
+- [ ] even more basically work: target a single file and apply
 - [ ] use an extensible enum for file types
 - [ ] support an absolute minimum amount of file types
 - [ ] use an extensible enum for license ID types
 - [ ] support an absolute minimum amount of license ID types
 - [ ] optional integration test
 - [ ] unit test
+

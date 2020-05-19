@@ -2,6 +2,7 @@ extern crate clap;
 extern crate env_logger;
 extern crate log;
 
+pub mod blaster;
 pub mod comment;
 pub mod dialect;
 pub mod id;
@@ -9,10 +10,16 @@ pub mod source;
 
 use clap::{App, Arg};
 use log::info;
+use std::path::Path;
+
+use crate::blaster::Opts;
+
 const NAME: &str = env!("CARGO_PKG_NAME");
 const VERSION: &str = env!("CARGO_PKG_VERSION");
+
 fn main() {
     env_logger::init();
+    info!("🔢 {}", VERSION);
     let args = App::new(NAME)
         .version(VERSION)
         .author("terkwood <38859656+Terkwood@users.noreply.github.com>")
@@ -21,12 +28,12 @@ fn main() {
             Arg::with_name("write")
                 .short("w")
                 .long("write")
-                .help("Update all relevant files with license string. If this option is ommitted, you'll simply see output")
+                .help("(bool) Update all relevant files with license string. If this option is ommitted, you'll simply see output")
                 .takes_value(false),
         )
         .arg(
             Arg::with_name("target")
-                .help("Sets the target directory to visit")
+                .help("Sets the target directory (or file) to visit")
                 .required(false)
                 .default_value(".")
                 .takes_value( true),
@@ -34,4 +41,14 @@ fn main() {
         .get_matches();
 
     info!("Args: {:?}", args);
+    blaster::visit(
+        Path::new(args.value_of("target").expect("arg target")),
+        Opts {
+            write: args
+                .value_of("write")
+                .expect("arg write")
+                .parse()
+                .expect("parsed"),
+        },
+    )
 }
