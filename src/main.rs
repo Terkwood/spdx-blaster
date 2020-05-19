@@ -5,11 +5,10 @@ extern crate log;
 extern crate memmap;
 
 pub mod blaster;
-pub mod comment;
-pub mod dialect;
-pub mod files;
+mod comment;
+mod dialect;
+mod files;
 mod license;
-pub mod source;
 
 use clap::{App, Arg};
 use log::trace;
