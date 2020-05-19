@@ -1,9 +1,10 @@
 use log::info;
 use memmap::MmapOptions;
-use std::fs::{metadata, File, OpenOptions};
-use std::io::{Error, Write};
+use std::fs::{metadata, OpenOptions};
+use std::io::Error;
 use std::path::Path;
 
+use crate::comment::Comment;
 use crate::license::License;
 
 /// Prepend the appropriate license to a given file.
@@ -11,8 +12,8 @@ use crate::license::License;
 /// by the memory map of the underlying file.
 /// If any other process accesses the file, we're going to
 /// crash.  Hooray.
-pub fn apply_license(path: &Path, license: License) -> Result<(), Error> {
-    let license_line: Vec<u8> = license.to_string().bytes().collect();
+pub fn apply_license(path: &Path, license: License, comment: Comment) -> Result<(), Error> {
+    let license_line: Vec<u8> = format!("{} {}", comment, license).bytes().collect();
 
     info!("hi {} with len {} ", license, license_line.len());
 
@@ -24,11 +25,13 @@ pub fn apply_license(path: &Path, license: License) -> Result<(), Error> {
 
     let total_len = file_len + license_line_len;
 
-    let mut map = unsafe { MmapOptions::new().len(total_len).map_mut(&file)? };
+    file.set_len(total_len as u64).expect("set file len");
+
+    let mut map = unsafe { MmapOptions::new().map_mut(&file)? };
 
     map[(total_len - license_line_len)..].copy_from_slice(&license_line);
 
-    map.rotate_left(license_line_len);
+    map.rotate_right(license_line_len);
 
     map.flush()
 }

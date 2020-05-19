@@ -2,15 +2,18 @@ use log::warn;
 use std::io;
 use std::path::Path;
 
+use crate::dialect::Dialect;
 use crate::files::apply_license;
 use crate::files::is_dir;
 use crate::license::License;
 
-const HARDCODED_LICENSE: License = License::MIT;
-
 pub fn visit(target: &Path, opts: Opts) -> Result<(), VisitError> {
     if !is_dir(target) {
-        Ok(apply_license(target, opts.license)?)
+        Ok(apply_license(
+            target,
+            opts.license,
+            Dialect::from(target).comment(),
+        )?)
     } else {
         warn!("Skipping dir: {:?}", target);
         Ok(())
