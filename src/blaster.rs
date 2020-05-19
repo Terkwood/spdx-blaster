@@ -1,31 +1,43 @@
 use log::warn;
+use std::io;
 use std::path::Path;
+
+use crate::files::apply_license;
+use crate::files::is_dir;
+use crate::license::License;
+
+const HARDCODED_LICENSE: License = License::MIT;
+
+pub fn visit(target: &Path, opts: Opts) -> Result<(), VisitError> {
+    if !is_dir(target) {
+        Ok(apply_license(target, opts.license)?)
+    } else {
+        warn!("Skipping dir: {:?}", target);
+        Ok(())
+    }
+}
 
 pub struct Opts {
     pub display: bool,
+    pub license: License,
 }
 
 impl Default for Opts {
     fn default() -> Self {
-        Opts { display: false }
+        Opts {
+            display: false,
+            license: License::MIT,
+        }
     }
 }
 
-pub fn visit(target: &Path, _opts: Opts) {
-    if !is_dir(target) {
-        apply_license(target)
-    } else {
-        warn!("Skipping dir: {:?}", target)
+#[derive(Debug)]
+pub enum VisitError {
+    IO(io::Error),
+}
+
+impl From<io::Error> for VisitError {
+    fn from(e: io::Error) -> Self {
+        VisitError::IO(e)
     }
-}
-
-/// Path::is_dir() is not guaranteed to be intuitively correct for "." and ".."
-/// See: https://github.com/rust-lang/rust/issues/45302
-/// Attribution: https://github.com/sharkdp/fd/blob/master/src/filesystem.rs
-fn is_dir(path: &Path) -> bool {
-    path.is_dir() && (path.file_name().is_some() || path.canonicalize().is_ok())
-}
-
-fn apply_license(file: &Path) {
-    todo!("no impl")
 }
