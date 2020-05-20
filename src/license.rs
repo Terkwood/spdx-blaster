@@ -13,19 +13,24 @@ pub enum License {
 
 const PREFIX: &str = "SPDX-License-Identifier: ";
 
+/// MIT is presently (May 2020) the most open source license
+/// on GitHub, and is also the license under which `spdx-blaster`
+/// is made available, so we've tentatively chosen it as the default.
 impl Default for License {
     fn default() -> Self {
         License::MIT
     }
 }
 
+const IGNORED_CHARS: &[char] = &['(', ')', ',', '.', ':', '-'];
+
 impl License {
     pub fn from(s: &str) -> Self {
         match s.trim().to_lowercase() {
-            t if License::Apache20.compare_lc(&t) => License::Apache20,
-            t if License::GPL20Only.compare_lc(&t) => License::GPL20Only,
-            t if License::GPL30OrLater.compare_lc(&t) => License::GPL30OrLater,
-            t if License::MIT.compare_lc(&t) => License::MIT,
+            t if License::Apache20.compare_flex_lowercase(&t) => License::Apache20,
+            t if License::GPL20Only.compare_flex_lowercase(&t) => License::GPL20Only,
+            t if License::GPL30OrLater.compare_flex_lowercase(&t) => License::GPL30OrLater,
+            t if License::MIT.compare_flex_lowercase(&t) => License::MIT,
             _ => License::default(),
         }
     }
@@ -40,8 +45,13 @@ impl License {
         .to_string()
     }
 
-    fn compare_lc(self, t: &str) -> bool {
-        t == self.id().trim().to_lowercase()
+    fn compare_flex_lowercase(self, t: &str) -> bool {
+        t.replace(&IGNORED_CHARS[..], "")
+            == self
+                .id()
+                .trim()
+                .to_lowercase()
+                .replace(&IGNORED_CHARS[..], "")
     }
 }
 
@@ -69,5 +79,9 @@ mod tests {
     fn from() {
         assert_eq!(License::from("MIT"), License::MIT);
         assert_eq!(License::from("GPL-3.0-or-later"), License::GPL30OrLater);
+        // ignore dots and dashes
+        assert_eq!(License::from("apache20"), License::Apache20);
+        // pick a popular default
+        assert_eq!(License::from("bogus-default"), License::MIT);
     }
 }
