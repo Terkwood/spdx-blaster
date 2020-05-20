@@ -33,3 +33,10 @@ extern crate log;
 extern crate memmap;
 ```
 
+## ⚠️ Warning!
+
+We can't guarantee a crash-free experience in the case where another process is editing your source code at the same time as `spdx-blaster`. 
+
+This is due to the use of `unsafe` memory-mapped files.
+
+We plan to look into this further at some point in the future, and welcome suggestions for how we can make this utility both performant and safe. 
