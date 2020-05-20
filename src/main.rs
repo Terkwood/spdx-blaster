@@ -20,6 +20,8 @@ use crate::license::License;
 const NAME: &str = env!("CARGO_PKG_NAME");
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 
+/// Writes [SPDX license IDs](https://spdx.dev/ids/) into your source
+/// files.
 fn main() {
     env_logger::init();
     trace!("🔢 {}", VERSION);
