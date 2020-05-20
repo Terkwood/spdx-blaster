@@ -51,6 +51,11 @@ all the alphanumeric characters used in the license ID.
 spdx-blaster -l apache20 test.cs
 ```
 
+### Licenses Supported
+
+The full list of licenses which are supported by `spdx-blaster`
+can be [found in ids.rs](src/ids.rs).
+
 ## ⚠️ Warning!
 
 We can't guarantee a crash-free experience in the case where another process is editing your source code at the same time as `spdx-blaster`. 
