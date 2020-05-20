@@ -33,6 +33,24 @@ extern crate log;
 extern crate memmap;
 ```
 
+### Specify a License
+
+`spdx-blaster` doesn't know about very many licenses yet, but it
+can handle some of the most popular ones.  Use the `--license` argument (or `-l`) to specify which license you want to use.
+
+```sh
+spdx-blaster -l gpl-3.0-or-later test.kt
+spdx-blaster --license gpl-2.0-only test.java
+```
+
+You may omit several types of punctuation from the
+license ID specification, but you must include
+all the alphanumeric characters used in the license ID.
+
+```sh
+spdx-blaster -l apache20 test.cs
+```
+
 ## ⚠️ Warning!
 
 We can't guarantee a crash-free experience in the case where another process is editing your source code at the same time as `spdx-blaster`. 
