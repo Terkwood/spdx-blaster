@@ -8,6 +8,7 @@ pub mod blaster;
 mod comment;
 mod dialect;
 mod files;
+mod ids;
 mod license;
 
 use clap::{App, Arg};
@@ -25,6 +26,7 @@ const VERSION: &str = env!("CARGO_PKG_VERSION");
 fn main() {
     env_logger::init();
     trace!("🔢 {}", VERSION);
+    let default_license_id = License::MIT.id();
     let args = App::new(NAME)
         .version(VERSION)
         .author("terkwood <38859656+Terkwood@users.noreply.github.com>")
@@ -33,9 +35,9 @@ fn main() {
             Arg::with_name("license")
                 .short("l")
                 .long("license")
-                .help("Specify which license you wish to apply")
+                .help("Specify which license you wish to apply. Use the official SPDX license ID, e.g.  GPL-2.0-or-later")
                 .takes_value(true)
-                .default_value("MIT"),
+                .default_value(&default_license_id),
         )
         .arg(
             Arg::with_name("display")
