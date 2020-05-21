@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: MIT
-use log::info;
 use memmap::{MmapMut, MmapOptions};
 use std::fs::{metadata, OpenOptions};
 use std::io::Error;
@@ -53,19 +52,13 @@ fn alter_with_shebang(map: &mut MmapMut, opts: &AlterOpts) {
         .iter()
         .position(|c| c == &b'\n')
         .map(|p| p + 1)
-        .unwrap_or(map.len());
-    info!("newline position is {}", first_newline_pos);
-
+        .unwrap_or_else(|| map.len());
     let mut new_intro: Vec<u8> = map.iter().take(first_newline_pos).cloned().collect();
     for lc in &opts.license_line {
         new_intro.push(*lc)
     }
 
     map.rotate_left(first_newline_pos);
-    info!(
-        "New intro {}",
-        std::str::from_utf8(&new_intro).expect("foo")
-    );
     let new_intro_len = new_intro.len();
 
     map[(opts.total_len - new_intro_len)..].copy_from_slice(&new_intro);
