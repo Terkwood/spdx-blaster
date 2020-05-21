@@ -52,13 +52,21 @@ fn alter_with_shebang(map: &mut MmapMut, opts: &AlterOpts) {
     let first_newline_pos = map.iter().position(|c| c == &b'\n').unwrap_or(map.len());
     info!("newline position is {}", first_newline_pos);
 
+    let mut new_intro: Vec<u8> = map.iter().take(first_newline_pos).cloned().collect();
+    for lc in &opts.license_line {
+        new_intro.push(*lc)
+    }
+
     map.rotate_left(first_newline_pos);
+    info!(
+        "New intro {}",
+        std::str::from_utf8(&new_intro).expect("foo")
+    );
+    let new_intro_len = new_intro.len();
 
-    map[(opts.total_len - opts.license_line_len - first_newline_pos)
-        ..(opts.total_len - first_newline_pos)]
-        .copy_from_slice(&opts.license_line);
+    map[(opts.total_len - new_intro_len)..].copy_from_slice(&new_intro);
 
-    map.rotate_right(opts.license_line_len)
+    map.rotate_right(new_intro_len)
 }
 
 fn alter_basic(map: &mut MmapMut, opts: &AlterOpts) {
