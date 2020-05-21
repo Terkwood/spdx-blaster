@@ -49,7 +49,11 @@ fn file_contains_shebang(map: &MmapMut) -> bool {
 }
 
 fn alter_with_shebang(map: &mut MmapMut, opts: &AlterOpts) {
-    let first_newline_pos = map.iter().position(|c| c == &b'\n').unwrap_or(map.len());
+    let first_newline_pos = map
+        .iter()
+        .position(|c| c == &b'\n')
+        .map(|p| p + 1)
+        .unwrap_or(map.len());
     info!("newline position is {}", first_newline_pos);
 
     let mut new_intro: Vec<u8> = map.iter().take(first_newline_pos).cloned().collect();
