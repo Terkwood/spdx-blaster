@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: MIT
+use log::info;
 use memmap::{MmapMut, MmapOptions};
 use std::fs::{metadata, OpenOptions};
 use std::io::Error;
@@ -49,10 +50,15 @@ fn file_contains_shebang(map: &MmapMut) -> bool {
 
 fn alter_with_shebang(map: &mut MmapMut, opts: &AlterOpts) {
     let first_newline_pos = map.iter().position(|c| c == &b'\n').unwrap_or(map.len());
-    map.rotate_left(first_newline_pos);
-    map[(opts.total_len - opts.license_line_len)..].copy_from_slice(&opts.license_line);
+    info!("newline position is {}", first_newline_pos);
 
-    map.rotate_right(first_newline_pos + opts.license_line_len)
+    map.rotate_left(first_newline_pos);
+
+    map[(opts.total_len - opts.license_line_len - first_newline_pos)
+        ..(opts.total_len - first_newline_pos)]
+        .copy_from_slice(&opts.license_line);
+
+    map.rotate_right(opts.license_line_len)
 }
 
 fn alter_basic(map: &mut MmapMut, opts: &AlterOpts) {
